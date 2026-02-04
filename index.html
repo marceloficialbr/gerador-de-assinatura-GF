@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Gerador de Assinatura</title>
+</head>
+
+<body style="
+  font-family:Arial, Helvetica, sans-serif;
+  font-size:12px;
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  background:#f6f2e8; 
+
+">
+
+<div style="
+  width:100%;
+  max-width:580px;
+  background:#ffffff;
+  padding:20px 25px;
+  margin-top:30px;
+  border-radius:6px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+">
+
+
+<div style="text-align:center; margin-bottom:10px;">
+  <img src="https://i.imgur.com/MtE6DXA.png"
+       alt="Grupo Farias"
+       style="max-width:200px; height:auto;">
+</div>
+
+<!-- <h3>Gerador de Assinatura de E-mail | Grupo Farias</h3>-->
+<h3 style="text-align:center;">
+  GERADOR DE ASSINATURA DE E-MAIL
+</h3>
+
+<hr style="margin:15px 0;">
+
+
+<form>
+  Nome:<br>
+  <input type="text" id="nome" style="width:100%;"><br><br>
+
+  Cargo:<br>
+  <input type="text" id="cargo" style="width:100%;"><br><br>
+
+  Departamento:<br>
+  <input type="text" id="departamento" style="width:100%;"><br><br>
+
+  E-mail corporativo:<br>
+  <input type="text" id="emailUsuario" style="width:200px;">
+  <strong>@grupofarias.com.br</strong><br><br>
+
+  Unidade:<br>
+  <select id="unidade" style="width:100%;">
+    <option value="">Selecione a unidade</option>
+    <option value="UBF">UBF</option>
+    <option value="UAN">UAN</option>
+    <option value="UIT">UIT</option>
+    <option value="UTP">UTP</option>
+    <option value="USJ">USJ</option>
+    <option value="UAV">UAV</option>
+  </select><br><br>
+
+  Ramal (opcional):<br>
+  <input type="text" id="ramal" style="width:100%;"><br><br>
+
+  <input type="checkbox" id="mostrarTelefone" checked>
+  Mostrar telefone da unidade<br><br>
+
+  <button type="button" onclick="gerarAssinatura()">
+    Gerar assinatura
+  </button>
+</form>
+
+<hr>
+
+<h4>Assinatura gerada:</h4>
+
+<div id="assinatura"
+     style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+</div>
+
+<button type="button" onclick="copiarAssinatura()">
+  Copiar assinatura
+</button>
+
+<p id="mensagem" style="color:green;"></p>
+
+<script>
+const unidades = {
+  UBF: {
+    empresa: "Vale Verde Empreendimentos Agrícolas Ltda.",
+    endereco: "RN-062, km 09 - Baía Formosa/RN - CEP 59194-000",
+    telefone: "+55 62 3413-7723"
+  },
+  UAN: {
+    empresa: "Usina Anicuns Açúcar e Álcool S/A",
+    endereco: "Rodovia GO-156, km 06, s/n – Zona Rural, Anicuns/GO - CEP 76170-000",
+    telefone: "+55 62 3413-7700"
+  },
+  UIT: {
+    empresa: "Vale Verde Empreendimentos Agrícolas Ltda.",
+    endereco: "GO-336, km 16 – Itapaci/GO - CEP 76360-000",
+    telefone: "+55 62 3413-7749"
+  },
+  UTP: {
+    empresa: "Vale Verde Empreendimentos Agrícolas Ltda.",
+    endereco: "GO-156, km 55 – Itapuranga/GO - CEP 76680-000",
+    telefone: "+55 62 3413-7773"
+  },
+  USJ: {
+    empresa: "Vale Verde Empreendimentos Agrícolas Ltda.",
+    endereco: "Rod. Júlio Antônio Basso – Rio das Pedras/SP - CEP 13390-000",
+    telefone: "+55 62 3413-7785"
+  },
+  UAV: {
+    empresa: "Usina Álcool Verde",
+    endereco: "Rodovia BR-317, km 59 – Capixaba/AC - CEP 69922-000",
+    telefone: "+55 68 3224-1205"
+  }
+};
+
+function gerarAssinatura() {
+  const nome = document.getElementById("nome").value;
+  const cargo = document.getElementById("cargo").value;
+  const departamento = document.getElementById("departamento").value;
+  const emailUsuario = document.getElementById("emailUsuario").value;
+  const unidade = document.getElementById("unidade").value;
+  const ramal = document.getElementById("ramal").value;
+  const mostrarTelefone = document.getElementById("mostrarTelefone").checked;
+
+  if (!emailUsuario || !unidade) {
+    alert("Preencha o e-mail e selecione a unidade.");
+    return;
+  }
+
+  const email = emailUsuario + "@grupofarias.com.br";
+  const dados = unidades[unidade];
+
+  const telefoneHTML = mostrarTelefone
+    ? `📞 ${dados.telefone}${ramal ? " | Ramal " + ramal : ""}<br>`
+    : "";
+
+  document.getElementById("assinatura").innerHTML = `
+  <table cellpadding="0" cellspacing="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000;">
+    <tr>
+      <td style="padding-right:12px; vertical-align:middle;">
+        <img src="https://i.imgur.com/MtE6DXA.png" width="130" style="display:block;">
+      </td>
+      <td style="border-left:2px solid #d4af37; padding-left:12px;">
+        <strong>${nome}</strong><br>
+        ${cargo}<br>
+        ${departamento}<br><br>
+
+        ${telefoneHTML}
+        ✉️ <a href="mailto:${email}" style="color:#000; text-decoration:none;">
+          ${email}
+        </a><br><br>
+
+        <strong>${dados.empresa}</strong><br>
+        📍 ${dados.endereco}<br>
+
+        <span style="font-size:10px; font-style:italic; color:#555;">
+          🌱 Preservar hoje é honrar as próximas gerações. Este e-mail não precisa ser impresso.
+        </span>
+
+        <div style="margin-top:8px; font-size:10px; color:#667; line-height:1.3;">
+          <strong>Aviso de Confidencialidade e LGPD</strong><br>
+          Esta mensagem e seus anexos podem conter informações confidenciais e/ou dados pessoais,
+          protegidos pela Lei nº 13.709/2018 (Lei Geral de Proteção de Dados – LGPD).
+          O uso, acesso, divulgação ou cópia não autorizados são proibidos.<br>
+          Caso você não seja o destinatário desta mensagem, por favor, comunique o remetente
+          e exclua este e-mail imediatamente.
+        </div>
+      </td>
+    </tr>
+  </table>
+  `;
+
+  document.getElementById("mensagem").innerText = "";
+}
+
+function copiarAssinatura() {
+  const assinatura = document.getElementById("assinatura");
+
+  if (!assinatura.innerHTML.trim()) {
+    alert("Gere a assinatura primeiro.");
+    return;
+  }
+
+  const range = document.createRange();
+  range.selectNode(assinatura);
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(range);
+
+  document.execCommand("copy");
+  window.getSelection().removeAllRanges();
+
+  document.getElementById("mensagem").innerText =
+    "Assinatura copiada! Agora é só colar no e-mail.";
+}
+</script>
+
+</div>
+</body>
+</html>
